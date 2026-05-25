@@ -1,0 +1,19 @@
+[project]
+name = "hkk-regi-lap-classification"
+version = "0.1.0"
+description = "HKK régi lap classification"
+requires-python = ">=3.11"
+dependencies = [
+    "mysql-connector-python>=9.0.0",
+    "requests>=2.32.0",
+    "pandas>=2.2.0",
+    "xgboost>=2.1.0",
+    "lightgbm>=4.5.0",
+    "scikit-learn>=1.5.0",
+    "flask>=3.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+]

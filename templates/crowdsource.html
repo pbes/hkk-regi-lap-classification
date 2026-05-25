@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HKK kártya címkézés</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold:        #D4AF37;
+            --gold-light:  #f0d060;
+            --bronze:      #b79353;
+            --brown-text:  #6B5B4B;
+            --page-bg:     #f2ead8;
+            --dark-box:    #3a2510;
+            --dark-box2:   #2e1c0a;
+            --box-border:  #5a3a18;
+            --white:       #ffffff;
+            --off-white:   #f0e4cc;
+            --muted-light: rgba(255,255,255,0.6);
+            --selected:    #7a1500;
+            --success-bg:  #1a2e1a;
+            --success-text:#a8d8a8;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Lato', sans-serif;
+            background: var(--page-bg);
+            color: var(--brown-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 16px;
+        }
+
+        /* ── Header box ── */
+        .header-box {
+            background: var(--dark-box);
+            border-radius: 14px;
+            padding: 20px 36px 16px;
+            text-align: center;
+            margin-bottom: 22px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+        }
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            font-size: 1.8em;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+        }
+        .subtitle {
+            font-size: 0.78em;
+            color: var(--muted-light);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .separator {
+            width: 240px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--bronze), transparent);
+            margin: 6px auto 10px;
+        }
+        .stats { font-size: 0.82em; color: var(--muted-light); }
+
+        /* ── Main layout ── */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+            justify-content: center;
+            max-width: 1020px;
+            width: 100%;
+        }
+
+        /* ── Card panel (light) ── */
+        .card-panel {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+        .card-panel img {
+            max-width: 100%;
+            max-height: 450px;
+            border-radius: 8px;
+            border: 2px solid var(--bronze);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .card-name {
+            margin-top: 10px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.05em;
+            color: var(--brown-text);
+        }
+
+        /* ── Vote panel (dark box) ── */
+        .vote-panel {
+            flex: 1;
+            min-width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: var(--dark-box);
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+        }
+        .vote-panel-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1em;
+            color: var(--gold);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--box-border);
+            padding-bottom: 10px;
+        }
+        .flags-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .flag-btn {
+            padding: 9px 17px;
+            border: 1px solid var(--box-border);
+            border-radius: 20px;
+            background: var(--dark-box2);
+            color: var(--off-white);
+            cursor: pointer;
+            font-size: 0.9em;
+            font-family: 'Lato', sans-serif;
+            transition: all 0.15s;
+            user-select: none;
+        }
+        .flag-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold-light);
+            background: #4a2e10;
+        }
+        .flag-btn.selected {
+            background: var(--selected);
+            border-color: var(--gold);
+            color: var(--white);
+            font-weight: 700;
+        }
+        .flag-btn.selected::after {
+            content: '  ✕';
+            font-size: 0.8em;
+            opacity: 0.75;
+        }
+        .hint { color: var(--muted-light); font-size: 0.82em; }
+        .submit-btn {
+            margin-top: 6px;
+            padding: 12px 28px;
+            background: transparent;
+            border: 1px solid var(--bronze);
+            color: var(--gold);
+            font-family: 'Cinzel', serif;
+            font-size: 1em;
+            letter-spacing: 1px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .submit-btn:hover {
+            background: var(--bronze);
+            color: #1a0e00;
+        }
+        .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* ── Messages ── */
+        .message {
+            margin-top: 18px;
+            padding: 14px 24px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1em;
+            border: 1px solid;
+        }
+        .message.success { background: var(--success-bg); color: var(--success-text); border-color: #3a6a3a; }
+        .message.done { background: var(--dark-box); color: var(--gold); border-color: var(--bronze); font-family: 'Cinzel', serif; border-radius: 14px; }
+
+        /* ── Leaderboard (dark box) ── */
+        .leaderboard {
+            margin-top: 28px;
+            width: 100%;
+            max-width: 420px;
+            background: var(--dark-box);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+        }
+        .leaderboard h2 {
+            font-family: 'Cinzel', serif;
+            margin-bottom: 12px;
+            color: var(--gold);
+            font-size: 1em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .leaderboard table { width: 100%; border-collapse: collapse; }
+        .leaderboard td, .leaderboard th {
+            padding: 6px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--box-border);
+            font-size: 0.88em;
+            color: var(--off-white);
+        }
+        .leaderboard th { color: var(--muted-light); font-size: 0.78em; letter-spacing: 1px; text-transform: uppercase; }
+        .leaderboard tr:first-child td { color: var(--gold); font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="header-box">
+        <h1>HKK kártya címkézés</h1>
+        <div class="subtitle">Hatalom Kártyái — káosz lapok</div>
+        <div class="separator"></div>
+        <div class="stats" id="stats"></div>
+    </div>
+
+    <div class="container" id="main-container">
+        <div class="card-panel" id="card-panel">
+            <img id="card-image" src="" alt="Kártya kép" />
+            <div class="card-name" id="card-name"></div>
+        </div>
+        <div class="vote-panel">
+            <div class="vote-panel-title">Funkciók kiválasztása</div>
+            <p class="hint">Válaszd ki a kártya funkcióit (0 is lehet):</p>
+            <div class="flags-cloud" id="flags-cloud"></div>
+            <button class="submit-btn" id="submit-btn" onclick="submitVote()">Mentés ✓</button>
+        </div>
+    </div>
+
+    <div class="message" id="message" style="display:none;"></div>
+
+    <div class="leaderboard" id="leaderboard">
+        <h2>Top 10 címkéző</h2>
+        <table>
+            <thead><tr><th>#</th><th>Felhasználó</th><th>Pont</th></tr></thead>
+            <tbody id="leaderboard-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const FLAGS = {{ flags | tojson }};
+        let currentCard = null;
+        let selectedFlags = new Set();
+
+        function getUserToken() {
+            let token = localStorage.getItem('hkk_user_token');
+            if (!token) {
+                token = crypto.randomUUID();
+                localStorage.setItem('hkk_user_token', token);
+            }
+            return token;
+        }
+
+        function renderFlags() {
+            const cloud = document.getElementById('flags-cloud');
+            cloud.innerHTML = '';
+            FLAGS.forEach(flag => {
+                const btn = document.createElement('div');
+                btn.className = 'flag-btn' + (selectedFlags.has(flag) ? ' selected' : '');
+                btn.textContent = flag;
+                btn.onclick = () => toggleFlag(flag, btn);
+                cloud.appendChild(btn);
+            });
+        }
+
+        function toggleFlag(flag, btn) {
+            if (selectedFlags.has(flag)) {
+                selectedFlags.delete(flag);
+                btn.classList.remove('selected');
+            } else {
+                selectedFlags.add(flag);
+                btn.classList.add('selected');
+            }
+        }
+
+        async function loadNextCard() {
+            document.getElementById('message').style.display = 'none';
+            document.getElementById('main-container').style.display = 'flex';
+            selectedFlags.clear();
+            renderFlags();
+
+            const res = await fetch('/api/next_card', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({user_token: getUserToken()}),
+            });
+            const data = await res.json();
+
+            if (data.done) {
+                document.getElementById('main-container').style.display = 'none';
+                const msg = document.getElementById('message');
+                msg.className = 'message done';
+                msg.textContent = data.message || 'Nincs több kártya!';
+                msg.style.display = 'block';
+                return;
+            }
+
+            currentCard = data.card;
+            document.getElementById('card-image').src = data.card.image_url;
+            document.getElementById('card-name').textContent = data.card.name;
+        }
+
+        async function submitVote() {
+            if (!currentCard) return;
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+
+            const res = await fetch('/api/vote', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    user_token: getUserToken(),
+                    card_id: currentCard.id,
+                    flags: Array.from(selectedFlags),
+                }),
+            });
+            const data = await res.json();
+            btn.disabled = false;
+
+            if (data.ok) {
+                // Short feedback then next card
+                const msg = document.getElementById('message');
+                msg.className = 'message success';
+                msg.textContent = '✓ Mentve! Következő kártya...';
+                msg.style.display = 'block';
+                setTimeout(() => loadNextCard(), 600);
+            } else {
+                alert(data.error || 'Hiba történt');
+            }
+        }
+
+        async function loadLeaderboard() {
+            const res = await fetch('/api/leaderboard');
+            const data = await res.json();
+            const tbody = document.getElementById('leaderboard-body');
+            tbody.innerHTML = data.map((r, i) =>
+                `<tr><td>${i+1}.</td><td>${r.user_token}</td><td>${r.points}</td></tr>`
+            ).join('');
+        }
+
+        async function loadStats() {
+            const res = await fetch('/api/stats');
+            const data = await res.json();
+            document.getElementById('stats').textContent =
+                `Összes: ${data.total_cards} | Lezárt: ${data.closed_cards} | Szavazatok: ${data.total_votes}`;
+        }
+
+        // Init
+        renderFlags();
+        loadNextCard();
+        loadLeaderboard();
+        loadStats();
+        setInterval(loadLeaderboard, 30000);
+        setInterval(loadStats, 15000);
+    </script>
+</body>
+</html>
