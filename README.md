@@ -65,6 +65,7 @@ DB_NAME=hkk-lapkereso-db
 | `xgboost` | XGBoost classifier |
 | `lightgbm` | LightGBM classifier |
 | `flask` | Crowdsource webapp |
+| `python-dotenv` | Load database configuration from .env file |
 
 ## Crowdsource webapp (`03_crowdsource_classifier.py`)
 
