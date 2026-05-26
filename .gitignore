@@ -178,3 +178,5 @@ pyrightconfig.json
 # Data files
 *.csv
 *.db
+
+.env

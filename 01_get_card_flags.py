@@ -1,16 +1,20 @@
 import csv
+import os
 import time
 import mysql.connector
 import requests
 from dataclasses import dataclass
 from urllib.parse import quote_plus
+from dotenv import load_dotenv
+
+load_dotenv()
 
 DB_CONFIG = {
-    "host": "localhost",
-    "port": 3306,
-    "user": "dev1",
-    "password": "Password1",
-    "database": "hkk-lapkereso-db",
+    "host": os.getenv("DB_HOST", "localhost"),
+    "port": int(os.getenv("DB_PORT", 3306)),
+    "user": os.getenv("DB_USER", "root"),
+    "password": os.getenv("DB_PASSWORD", "secret"),
+    "database": os.getenv("DB_NAME", "hkk-lapkereso-db"),
 }
 
 QUERY = "SELECT id, name, text, type FROM cards c"
