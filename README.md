@@ -32,6 +32,20 @@ uv run python 02_multi_class_classifier.py
 uv run python 03_crowdsource_classifier.py
 ```
 
+## Configuration
+
+For database connection, create a `.env` file in the project root with the following content or run `cp .env.example .env` and edit the values as your environment requires:
+
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=secret
+DB_NAME=hkk-lapkereso-db
+```
+
+> Note: only required for `01_get_card_flags.py`
+
 ## Data files
 
 | File | Description |
